@@ -32,4 +32,5 @@ urlpatterns = [
         "docs/", schema_view.with_ui("swagger", cache_timeout=0), name="swagger-schema"
     ),
     path("", include(("users.urls", "users"), namespace="users")),
+    path("", include(("accounts.urls", "accounts"), namespace="accounts"))
 ]

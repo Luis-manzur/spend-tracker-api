@@ -15,4 +15,4 @@ class ProfileModelSerializer(serializers.ModelSerializer):
 
         model = Profile
         fields = ("picture", "biography", "balance")
-        read_only_fields = ("balance", )
+        read_only_fields = ("balance",)

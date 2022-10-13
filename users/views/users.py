@@ -3,12 +3,14 @@
 # Django REST Framework
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
+
 # Permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from accounts.models import Account
 from accounts.serializers.accounts import AccountModelSerializer
+
 # Models
 from users.models import User
 from users.permissions import IsAccountOwner
@@ -18,6 +20,7 @@ from users.serializers import (
     UserModelSerializer,
     UserSignUpSerializer,
 )
+
 # Serializers
 from users.serializers.profiles import ProfileModelSerializer
 
@@ -99,6 +102,9 @@ class UserViewSet(
         response = super(UserViewSet, self).retrieve(request, *args, **kwargs)
         accounts = Account.objects.filter(user=request.user.id)
 
-        data = {"user": response.data, "Accounts": AccountModelSerializer(accounts, many=True).data}
+        data = {
+            "user": response.data,
+            "Accounts": AccountModelSerializer(accounts, many=True).data,
+        }
         response.data = data
         return response

@@ -14,16 +14,14 @@ class Account(SpendTrackerModel):
     """
 
     TYPE_CHOICES = (
-            ("Bank", "Bank"),
-            ("Cash", "Cash"),
-            ("Crypto", "Crypto"),
+        ("Bank", "Bank"),
+        ("Cash", "Cash"),
+        ("Crypto", "Crypto"),
     )
 
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
-    name = models.CharField(
-        "Account name", blank=False, max_length=120
-    )
+    name = models.CharField("Account name", blank=False, max_length=120)
     type = models.CharField(choices=TYPE_CHOICES, blank=True, max_length=20)
 
     balance = models.FloatField(

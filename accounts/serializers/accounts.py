@@ -1,9 +1,7 @@
 """Account serializer."""
 
-# Django REST Framework
 from rest_framework import serializers
 
-# Models
 from accounts.models import Account
 
 
@@ -25,5 +23,6 @@ class CreateAccountModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         """Meta class."""
+
         model = Account
-        fields = "__all__"
+        exclude = ["is_active"]

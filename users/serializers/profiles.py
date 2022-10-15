@@ -1,9 +1,7 @@
 """Profile serializer."""
 
-# Django REST Framework
 from rest_framework import serializers
 
-# Models
 from users.models import Profile
 
 

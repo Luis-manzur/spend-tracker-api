@@ -1,9 +1,7 @@
 """Transactions permissions."""
 
-# Django REST Framework
 from rest_framework.permissions import BasePermission
 
-# Models
 from transactions.models import Transaction
 
 

@@ -1,1 +1,1 @@
-from .accounts import AccountModelSerializer, CreateAccountModelSerializer
+from .accounts import AccountModelSerializer, CreateAccountModelSerializer, RetrieveAccountModelSerializer

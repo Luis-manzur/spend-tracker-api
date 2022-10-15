@@ -1,17 +1,12 @@
 """Users views."""
 
-# Django REST Framework
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
-
-# Permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from accounts.models import Account
 from accounts.serializers.accounts import AccountModelSerializer
-
-# Models
 from users.models import User
 from users.permissions import IsAccountOwner
 from users.serializers import (
@@ -20,8 +15,6 @@ from users.serializers import (
     UserModelSerializer,
     UserSignUpSerializer,
 )
-
-# Serializers
 from users.serializers.profiles import ProfileModelSerializer
 
 

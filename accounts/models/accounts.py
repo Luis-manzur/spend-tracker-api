@@ -1,9 +1,7 @@
 """Account model."""
 
-# Django
 from django.db import models
 
-# Utilities
 from utils.models import SpendTrackerModel
 
 
@@ -19,7 +17,7 @@ class Account(SpendTrackerModel):
         ("Crypto", "Crypto"),
     )
 
-    user = models.ForeignKey("users.User", on_delete=models.CASCADE)
+    user = models.ForeignKey("users.User", related_name='accounts', on_delete=models.CASCADE)
 
     name = models.CharField("Account name", blank=False, max_length=120)
     type = models.CharField(choices=TYPE_CHOICES, blank=True, max_length=20)

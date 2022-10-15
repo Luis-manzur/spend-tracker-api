@@ -1,9 +1,7 @@
 """Transaction model."""
 
-# Django
 from django.db import models
 
-# Utilities
 from utils.models import SpendTrackerModel
 
 
@@ -39,7 +37,7 @@ class Transaction(SpendTrackerModel):
 
     TYPE_CHOICES = (("Income", "Income"), ("Expense", "Expense"))
 
-    account = models.ForeignKey("accounts.Account", on_delete=models.CASCADE)
+    account = models.ForeignKey("accounts.Account", related_name='transactions', on_delete=models.CASCADE)
 
     name = models.CharField(" name", blank=False, max_length=120)
 

@@ -2,21 +2,16 @@
 
 from __future__ import absolute_import, unicode_literals
 
-# Django
+from datetime import timedelta
+
+import jwt
+from celery import shared_task
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils import timezone
 
-# Models
 from users.models import User
-
-# Celery
-from celery import shared_task
-
-# Utilities
-import jwt
-from datetime import timedelta
 
 
 def gen_verification_token(user):

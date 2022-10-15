@@ -35,7 +35,9 @@ class TransactionViewSet(
     filter_fields = ("type", "name", "category")
 
     def get_queryset(self):
-        queryset = Transaction.objects.filter(account__user=self.request.user)
+        queryset = Transaction.objects.all()
+        if self.action == "list":
+            queryset = Transaction.objects.filter(account__user=self.request.user)
         return queryset
 
     def get_serializer_class(self):

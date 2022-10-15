@@ -6,9 +6,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import Account
 from accounts.permissions import IsAccountOwner
-from accounts.serializers import AccountModelSerializer, CreateAccountModelSerializer
-from transactions.models import Transaction
-from transactions.serializers import TransactionModelSerializer
+from accounts.serializers import AccountModelSerializer, CreateAccountModelSerializer, RetrieveAccountModelSerializer
 
 
 class AccountViewSet(
@@ -31,6 +29,8 @@ class AccountViewSet(
         """Assign serializer based on action"""
         if self.action in ["create"]:
             return CreateAccountModelSerializer
+        elif self.action in ["retrieve"]:
+            return RetrieveAccountModelSerializer
         else:
             return AccountModelSerializer
 
@@ -44,13 +44,5 @@ class AccountViewSet(
         return [p() for p in permissions]
 
     def retrieve(self, request, *args, **kwargs):
-        """Get account by id"""
         response = super(AccountViewSet, self).retrieve(request, *args, **kwargs)
-        transactions = Transaction.objects.filter(account=self.get_object())
-
-        data = {
-            "account": response.data,
-            "transactions": TransactionModelSerializer(transactions, many=True).data,
-        }
-        response.data = data
         return response

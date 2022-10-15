@@ -1,9 +1,7 @@
 """Profile model."""
 
-# Django
 from django.db import models
 
-# Utilities
 from utils.models import SpendTrackerModel
 
 

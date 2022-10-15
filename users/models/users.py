@@ -1,11 +1,9 @@
 """User model."""
 
-# Django
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
+from django.db import models
 
-# Utilities
 from utils.models import SpendTrackerModel
 
 

@@ -22,17 +22,22 @@ class AccountModelSerializer(serializers.ModelSerializer):
 
 class RetrieveAccountModelSerializer(serializers.ModelSerializer):
     """Retrieve Account model serializer"""
-    transactions = serializers.SerializerMethodField('paginated_transactions')
+
+    transactions = serializers.SerializerMethodField("paginated_transactions")
 
     def paginated_transactions(self, obj):
-        request = self.context['request']
+        request = self.context["request"]
         default_offset = settings.REST_FRAMEWORK["PAGE_SIZE"]
-        page_size = int(request.query_params.get('limit') or default_offset)
-        transactions = get_transactions_queryset(obj.transactions.all(), request.query_params)
+        page_size = int(request.query_params.get("limit") or default_offset)
+        transactions = get_transactions_queryset(
+            obj.transactions.all(), request.query_params
+        )
         paginator = Paginator(transactions, page_size)
-        offset = int(request.query_params.get('offset') or 0)
+        offset = int(request.query_params.get("offset") or 0)
 
-        count, next_page, previous_page, data = get_pagination(offset, page_size, paginator, request, transactions)
+        count, next_page, previous_page, data = get_pagination(
+            offset, page_size, paginator, request, transactions
+        )
         paginated_transactions = {
             "count": count,
             "next": next_page,

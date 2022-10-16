@@ -16,7 +16,7 @@ from users.tasks import send_confirmation_email
 
 class UserModelSerializer(serializers.ModelSerializer):
     """User model serializer."""
-
+    balance = serializers.SerializerMethodField("get_balance")
     profile = ProfileModelSerializer(read_only=True)
     accounts = AccountModelSerializer(many=True, read_only=True)
 
@@ -31,8 +31,18 @@ class UserModelSerializer(serializers.ModelSerializer):
             "email",
             "phone_number",
             "profile",
-            "accounts"
+            "accounts",
+            "balance",
         )
+        extra_fields = ("balance",)
+
+    def get_balance(self, user):
+        balance = 0
+
+        for account in user.accounts.all():
+            balance += account.balance
+
+        return balance
 
 
 class UserSignUpSerializer(serializers.Serializer):

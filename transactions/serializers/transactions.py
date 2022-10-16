@@ -3,7 +3,8 @@
 from rest_framework import serializers
 
 from accounts.models import Account
-from transactions.models import Transaction
+from transactions.models import Transaction, MonthlyBill
+from transactions.serializers import MonthlyBillModelSerializer
 
 
 class TransactionModelSerializer(serializers.ModelSerializer):
@@ -13,12 +14,14 @@ class TransactionModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Transaction
-        fields = ("name", "type", "amount", "category")
+        fields = ("name", "type", "amount", "category", "created")
         read_only_fields = ("amount", "type")
 
 
 class CreateTransactionModelSerializer(serializers.ModelSerializer):
     """Create transaction model serializer."""
+    monthlybill = MonthlyBillModelSerializer(required=False, allow_null=True, default=None)
+    is_month_to_month = serializers.BooleanField(required=True)
 
     class Meta:
         """Meta class."""
@@ -72,18 +75,40 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
 
         return data
 
+    def validate_monthlybill(self, data):
+        month_to_month = self.initial_data.get("is_month_to_month")
+
+        if month_to_month and data is None:
+            raise serializers.ValidationError("This field is required.")
+
+        return data
+
     def create(self, validated_data):
-        # Update account Balance
-        account = self.context["account"]
+        is_month_to_month = validated_data.get('is_month_to_month')
+        monthly_bill = validated_data.get('monthlybill')
 
-        if self.initial_data["type"] == "Income":
-            account.balance += validated_data["amount"]
+        if monthly_bill is not None:
+            del validated_data['monthlybill']
 
+        if is_month_to_month is not None:
+            del validated_data['is_month_to_month']
+
+        transaction = Transaction.objects.create(**validated_data)
+
+        if not is_month_to_month:
+            validated_data["monthlybill"] = None
+            account = self.context["account"]
+
+            if self.initial_data["type"] == "Income":
+                account.balance += validated_data["amount"]
+
+            else:
+                account.balance -= validated_data["amount"]
+
+            account.save()
         else:
-            account.balance -= validated_data["amount"]
-
-        account.save()
+            monthly_bill['transaction'] = transaction
+            monthly_bill = MonthlyBill.objects.create(**monthly_bill)
 
         # Save transaction
-
-        return super(CreateTransactionModelSerializer, self).create(validated_data)
+        return transaction

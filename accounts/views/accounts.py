@@ -6,7 +6,11 @@ from rest_framework.permissions import IsAuthenticated
 
 from accounts.models import Account
 from accounts.permissions import IsAccountOwner
-from accounts.serializers import AccountModelSerializer, CreateAccountModelSerializer, RetrieveAccountModelSerializer
+from accounts.serializers import (
+    AccountModelSerializer,
+    CreateAccountModelSerializer,
+    RetrieveAccountModelSerializer,
+)
 
 
 class AccountViewSet(

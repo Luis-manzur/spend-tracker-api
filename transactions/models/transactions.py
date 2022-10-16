@@ -7,7 +7,7 @@ from utils.models import SpendTrackerModel
 
 class Transaction(SpendTrackerModel):
     """Transaction model.
-    An account holds a user's private and personal transaction data like amount, category, account
+    A transaction holds a user's private and personal transaction data like amount, category, account
     and statistics.
     """
 
@@ -37,7 +37,9 @@ class Transaction(SpendTrackerModel):
 
     TYPE_CHOICES = (("Income", "Income"), ("Expense", "Expense"))
 
-    account = models.ForeignKey("accounts.Account", related_name='transactions', on_delete=models.CASCADE)
+    account = models.ForeignKey(
+        "accounts.Account", related_name="transactions", on_delete=models.CASCADE
+    )
 
     name = models.CharField(" name", blank=False, max_length=120)
 

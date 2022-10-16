@@ -1,9 +1,10 @@
 """Transactions views."""
 
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import mixins, viewsets
+from rest_framework import mixins, viewsets, status
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from transactions.models import Transaction
 from transactions.permissions import IsTransactionsOwner
@@ -37,7 +38,7 @@ class TransactionViewSet(
     def get_queryset(self):
         queryset = Transaction.objects.all()
         if self.action == "list":
-            queryset = Transaction.objects.filter(account__user=self.request.user)
+            queryset = Transaction.objects.filter(account__user=self.request.user, monthlybill=None)
         return queryset
 
     def get_serializer_class(self):
@@ -54,3 +55,11 @@ class TransactionViewSet(
             permissions = [IsTransactionsOwner, IsAuthenticated]
 
         return [p() for p in permissions]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        transaction = serializer.save()
+        transaction = TransactionModelSerializer(transaction).data
+        headers = self.get_success_headers(transaction)
+        return Response(transaction, status=status.HTTP_201_CREATED, headers=headers)

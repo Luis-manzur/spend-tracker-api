@@ -1,4 +1,5 @@
 import os
+
 from celery import Celery
 from celery.schedules import crontab
 
@@ -9,9 +10,9 @@ app = Celery("spendTrackerApi")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 app.conf.beat_schedule = {
-    "delay-every-15-min": {
-        "task": "api_trip.tasks.delay_trip",
-        "schedule": crontab(minute="*/15"),
+    'every-day': {
+        "task": "transactions.tasks.apply_monthly_bills",
+        "schedule": crontab(minute=0, hour="*/24"),
     }
 }
 # Load task modules from all registered Django apps.

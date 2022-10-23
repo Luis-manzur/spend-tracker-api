@@ -3,3 +3,4 @@
 */__pycache__
 /postgres_data
 /.idea
+celerybeat-schedule

@@ -14,7 +14,7 @@ class TransactionModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Transaction
-        fields = ("name", "type", "amount", "category", "created")
+        fields = ("name", "type", "amount", "category", "created", "id")
         read_only_fields = ("amount", "type")
 
 

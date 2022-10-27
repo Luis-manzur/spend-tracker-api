@@ -63,15 +63,16 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
         return data
 
     def validate_amount(self, data):
-        account = Account.objects.get(pk=self.initial_data["account"])
-        self.context["account"] = account
+        if isinstance(self.initial_data["account"], int):
+            account = Account.objects.get(pk=self.initial_data["account"])
+            self.context["account"] = account
 
-        if self.initial_data["type"] == "Expense":
+            if self.initial_data["type"] == "Expense":
 
-            if account.balance < data:
-                raise serializers.ValidationError(
-                    "The amount is greater than the actual amount."
-                )
+                if account.balance < data:
+                    raise serializers.ValidationError(
+                        "The amount is greater than the actual amount."
+                    )
 
         return data
 

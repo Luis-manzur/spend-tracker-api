@@ -17,17 +17,23 @@ class AccountViewSet(
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
     mixins.CreateModelMixin,
+    mixins.ListModelMixin,
     viewsets.GenericViewSet,
 ):
     """Account view set.
     Handle Account create, update and retrieve.
     """
 
-    queryset = Account.objects.all()
     filter_backends = (OrderingFilter, SearchFilter)
     search_fields = ("type", "name")
     ordering = ("-balance", "-name")
     filter_fields = ("type", "name")
+
+    def get_queryset(self):
+        queryset = Account.objects.all()
+        if self.action == "list":
+            queryset = Account.objects.filter(user=self.request.user)
+        return queryset
 
     def get_serializer_class(self):
         """Assign serializer based on action"""

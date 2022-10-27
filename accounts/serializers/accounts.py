@@ -16,7 +16,7 @@ class AccountModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Account
-        fields = ("name", "type", "balance")
+        fields = ("name", "type", "balance", "id")
         read_only_fields = ("balance",)
 
 
@@ -50,7 +50,7 @@ class RetrieveAccountModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Account
-        fields = ("name", "type", "balance", "transactions")
+        fields = ("name", "type", "balance", "transactions", "id")
 
 
 class CreateAccountModelSerializer(serializers.ModelSerializer):

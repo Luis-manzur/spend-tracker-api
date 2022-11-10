@@ -1,2 +1,3 @@
+from .goals import GoalModelSerializer, CreateGoalModelSerializer
 from .monthly_bills import MonthlyBillModelSerializer
 from .transactions import TransactionModelSerializer, CreateTransactionModelSerializer

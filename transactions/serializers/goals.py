@@ -17,6 +17,10 @@ class CreateGoalModelSerializer(serializers.ModelSerializer):
     use_current_savings = serializers.BooleanField(default=False)
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
+    class Meta:
+        model = Goal
+        exclude = ["is_active"]
+
     def validate_use_current_savings(self, data):
         try:
             if data:
@@ -38,6 +42,9 @@ class CreateGoalModelSerializer(serializers.ModelSerializer):
         finally:
             return data
 
-    class Meta:
-        model = Goal
-        exclude = ["is_active"]
+    def create(self, data):
+        del data['use_current_savings']
+
+        return super(CreateGoalModelSerializer, self).create(validated_data=data)
+
+

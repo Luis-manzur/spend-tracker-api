@@ -8,15 +8,14 @@ from users.models import User
 
 
 class GoalModelSerializer(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-
     class Meta:
         model = Goal
-        exclude = ["is_active"]
+        exclude = ["is_active", "user"]
 
 
 class CreateGoalModelSerializer(serializers.ModelSerializer):
     use_current_savings = serializers.BooleanField(default=False)
+    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     def validate_use_current_savings(self, data):
         try:

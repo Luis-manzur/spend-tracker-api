@@ -12,4 +12,4 @@ class ProfileModelSerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = Profile
-        fields = ("picture", "biography")
+        fields = ("picture", "biography", "membership")

@@ -10,8 +10,6 @@ router = DefaultRouter()
 router.register(
     r"transactions", transaction_views.TransactionViewSet, basename="transactions"
 )
-router.register(
-    r"goals", goals_views.GoalsViewSet, basename="goals"
-)
+router.register(r"goals", goals_views.GoalsViewSet, basename="goals")
 
 urlpatterns = [path("", include(router.urls))]

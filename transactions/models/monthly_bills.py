@@ -14,7 +14,6 @@ class MonthlyBill(SpendTrackerModel):
     transaction = models.OneToOneField(
         "transactions.Transaction", on_delete=models.CASCADE
     )
-    billing_date = models.IntegerField(blank=False, validators=[
-        MaxValueValidator(30),
-        MinValueValidator(1)
-    ])
+    billing_date = models.IntegerField(
+        blank=False, validators=[MaxValueValidator(30), MinValueValidator(1)]
+    )

@@ -20,7 +20,10 @@ class TransactionModelSerializer(serializers.ModelSerializer):
 
 class CreateTransactionModelSerializer(serializers.ModelSerializer):
     """Create transaction model serializer."""
-    monthlybill = MonthlyBillModelSerializer(required=False, allow_null=True, default=None)
+
+    monthlybill = MonthlyBillModelSerializer(
+        required=False, allow_null=True, default=None
+    )
     is_month_to_month = serializers.BooleanField(required=True)
 
     class Meta:
@@ -85,14 +88,14 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        is_month_to_month = validated_data.get('is_month_to_month')
-        monthly_bill = validated_data.get('monthlybill')
+        is_month_to_month = validated_data.get("is_month_to_month")
+        monthly_bill = validated_data.get("monthlybill")
 
         if monthly_bill is not None:
-            del validated_data['monthlybill']
+            del validated_data["monthlybill"]
 
         if is_month_to_month is not None:
-            del validated_data['is_month_to_month']
+            del validated_data["is_month_to_month"]
 
         transaction = Transaction.objects.create(**validated_data)
 
@@ -108,7 +111,7 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
 
             account.save()
         else:
-            monthly_bill['transaction'] = transaction
+            monthly_bill["transaction"] = transaction
             monthly_bill = MonthlyBill.objects.create(**monthly_bill)
 
         # Save transaction

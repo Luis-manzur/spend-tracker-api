@@ -10,7 +10,7 @@ app = Celery("spendTrackerApi")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 app.conf.beat_schedule = {
-    'every-day': {
+    "every-day": {
         "task": "transactions.tasks.apply_monthly_bills",
         "schedule": crontab(minute=0, hour="*/24"),
     }

@@ -30,7 +30,9 @@ class CreateGoalModelSerializer(serializers.ModelSerializer):
 
                 goal_amount = self.initial_data.get("amount")
                 if balance >= goal_amount:
-                    raise serializers.ValidationError("You already have your goal amount")
+                    raise serializers.ValidationError(
+                        "You already have your goal amount"
+                    )
         except Exception as ex:
             raise serializers.ValidationError(f"Unexpected error occurred: {ex}")
 

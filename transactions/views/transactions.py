@@ -38,7 +38,9 @@ class TransactionViewSet(
     def get_queryset(self):
         queryset = Transaction.objects.all()
         if self.action == "list":
-            queryset = Transaction.objects.filter(account__user=self.request.user, monthlybill=None)
+            queryset = Transaction.objects.filter(
+                account__user=self.request.user, monthlybill=None
+            )
         return queryset
 
     def get_serializer_class(self):

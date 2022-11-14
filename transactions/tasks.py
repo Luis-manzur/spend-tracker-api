@@ -20,7 +20,7 @@ def apply_monthly_bills():
             "is_month_to_month": False,
             "type": transaction.type,
             "category": transaction.category,
-            "account": transaction.account_id
+            "account": transaction.account_id,
         }
         serializer = CreateTransactionModelSerializer(new_transaction)
         if serializer.is_valid():

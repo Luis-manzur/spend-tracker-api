@@ -3,6 +3,7 @@
 from rest_framework import serializers
 
 from accounts.models import Account
+from transactions.models import Goal
 from transactions.models import Transaction, MonthlyBill
 from transactions.serializers import MonthlyBillModelSerializer
 
@@ -102,17 +103,37 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
         if not is_month_to_month:
             validated_data["monthlybill"] = None
             account = self.context["account"]
+            goals = Goal.objects.filter(user=account.user)
 
-            if self.initial_data["type"] == "Income":
-                account.balance += validated_data["amount"]
+            for goal in goals:
+                self.sum_transaction_amount_to_goal(validated_data["amount"], self.initial_data["type"], goal)
 
-            else:
-                account.balance -= validated_data["amount"]
+            self.sum_transaction_amount_to_account(validated_data["amount"], self.initial_data["type"], account)
 
-            account.save()
+
         else:
             monthly_bill["transaction"] = transaction
             monthly_bill = MonthlyBill.objects.create(**monthly_bill)
 
         # Save transaction
         return transaction
+
+    @staticmethod
+    def sum_transaction_amount_to_account(amount, transaction_type, account):
+        if transaction_type == "Income":
+            account.balance += amount
+
+        else:
+            account.balance -= amount
+
+        account.save()
+
+    @staticmethod
+    def sum_transaction_amount_to_goal(amount, transaction_type, goal):
+        if transaction_type == "Income":
+            goal.saved += amount
+
+        else:
+            goal.saved -= amount
+
+        goal.save()

@@ -22,27 +22,28 @@ class CreateGoalModelSerializer(serializers.ModelSerializer):
         exclude = ["is_active", "saved"]
 
     def validate_use_current_savings(self, data):
-        try:
-            if data:
-                user: User = self.initial_data.get("user")
-                accounts = Account.objects.filter(user=user)
+        if data:
+            user: User = self.context["user"]
+            accounts = Account.objects.filter(user=user)
+            balance = 0
 
-                balance = 0
-                for account in accounts:
-                    balance += account.balance
+            for account in accounts:
+                balance += account.balance
 
-                goal_amount = self.initial_data.get("amount")
-                if balance >= goal_amount:
-                    raise serializers.ValidationError(
-                        "You already have your goal amount"
-                    )
-        except Exception as ex:
-            raise serializers.ValidationError(f"Unexpected error occurred: {ex}")
+            self.context["balance"] = balance
 
-        finally:
-            return data
+            goal_amount = self.initial_data.get("amount")
+            if balance >= goal_amount:
+                raise serializers.ValidationError(
+                    "You already have your goal amount"
+                )
+        return data
 
     def create(self, data):
         del data['use_current_savings']
+
+        balance = self.context.get("balance")
+        if balance:
+            data["saved"] = balance
 
         return super(CreateGoalModelSerializer, self).create(validated_data=data)

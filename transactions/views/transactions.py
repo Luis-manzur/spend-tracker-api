@@ -59,8 +59,9 @@ class TransactionViewSet(
         return [p() for p in permissions]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer: CreateTransactionModelSerializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.context['user'] = self.request.user
         transaction = serializer.save()
         transaction = TransactionModelSerializer(transaction).data
         headers = self.get_success_headers(transaction)

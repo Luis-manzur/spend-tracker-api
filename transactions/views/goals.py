@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from transactions.models import Goal
-from transactions.permissions import IsTransactionsOwner
+from transactions.permissions import IsObjectOwner
 from transactions.serializers import (
     GoalModelSerializer,
     CreateGoalModelSerializer,
@@ -46,12 +46,13 @@ class GoalsViewSet(
         if self.action in ["create"]:
             permissions = [IsAuthenticated]
         else:
-            permissions = [IsTransactionsOwner, IsAuthenticated]
+            permissions = [IsObjectOwner, IsAuthenticated]
 
         return [p() for p in permissions]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer: CreateGoalModelSerializer = self.get_serializer(data=request.data)
+        serializer.context["user"] = request.user
         serializer.is_valid(raise_exception=True)
         goal = serializer.save()
         goal = GoalModelSerializer(goal).data

@@ -17,3 +17,4 @@ class Goal(SpendTrackerModel):
         ],
     )
     saved = models.FloatField(null=False, default=0)
+    completed = models.BooleanField(null=True, default=False)

@@ -103,7 +103,7 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
         if not is_month_to_month:
             validated_data["monthlybill"] = None
             account = self.context["account"]
-            goals = Goal.objects.filter(user=account.user)
+            goals = Goal.objects.filter(user=account.user, completed=False)
 
             for goal in goals:
                 self.sum_transaction_amount_to_goal(validated_data["amount"], self.initial_data["type"], goal)
@@ -129,10 +129,12 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
         account.save()
 
     @staticmethod
-    def sum_transaction_amount_to_goal(amount, transaction_type, goal):
+    def sum_transaction_amount_to_goal(amount, transaction_type, goal: Goal):
         if transaction_type == "Income":
             goal.saved += amount
-
+            if goal.saved >= goal.amount:
+                goal.saved = goal.amount
+                goal.completed = True
         else:
             goal.saved -= amount
 

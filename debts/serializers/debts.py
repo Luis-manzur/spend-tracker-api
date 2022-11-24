@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from accounts.models import Account
 from debts.models import Debt
-from debts.tasks import send_debt_paid_email
+from debts.tasks import send_debt_paid_email, send_debt_email
 from transactions.models import Transaction
 from users.serializers import SimpleUserSerializer
 
@@ -23,7 +23,8 @@ class CreateDebtModelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         response = super(CreateDebtModelSerializer, self).create(validated_data)
-        print(response)
+        send_debt_email.delay(response)
+        return response
 
 
 class DebtModelSerializer(serializers.ModelSerializer):

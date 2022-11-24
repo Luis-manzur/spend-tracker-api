@@ -106,6 +106,8 @@ class UserViewSet(
     def send_friend_request(self, request, *args, **kwargs):
         try:
             to_user = User.objects.get(username=request.data["to_user"])
+            if not to_user:
+                raise Exception("This username doesn't exist")
             from_user = request.user
             friend_request, created = FriendRequest.objects.get_or_create(
                 from_user=from_user, to_user=to_user

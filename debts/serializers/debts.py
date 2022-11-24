@@ -22,9 +22,10 @@ class CreateDebtModelSerializer(serializers.ModelSerializer):
         return data
 
     def create(self, validated_data):
-        response = super(CreateDebtModelSerializer, self).create(validated_data)
-        send_debt_email.delay(response)
-        return response
+        debt = Debt.objects.create(**validated_data)
+        debt.save()
+        send_debt_email.delay(debt)
+        return debt
 
 
 class DebtModelSerializer(serializers.ModelSerializer):

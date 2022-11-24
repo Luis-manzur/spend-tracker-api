@@ -88,6 +88,21 @@ class PayDebtModelSerializer(serializers.Serializer):
             account.balance -= debt.amount
             account.save()
             transaction.save()
+
+            friend_account = Account.objects.filter(user=debt.from_user).first()
+
+            friend_transaction = Transaction.objects.create(
+                account=friend_account,
+                category="Income",
+                type="Income",
+                description=transaction_description,
+                amount=debt.amount,
+                name=transaction_name,
+            )
+            friend_account.balance += debt.amount
+            friend_account.save()
+            friend_transaction.save()
+
             debt.delete()
         except Exception as e:
             raise serializers.ValidationError(f"Unexpected error '{e}'")

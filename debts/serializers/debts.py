@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from accounts.models import Account
 from debts.models import Debt
-from debts.tasks import send_debt_paid_email
+from debts.tasks import send_debt_paid_email, send_debt_email
 from transactions.models import Transaction
 from users.serializers import SimpleUserSerializer
 
@@ -24,7 +24,7 @@ class CreateDebtModelSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         debt = Debt.objects.create(**validated_data)
         debt.save()
-        # send_debt_email.delay(debt)
+        send_debt_email.delay(debt.pk)
         return debt
 
 
@@ -108,7 +108,7 @@ class PayDebtModelSerializer(serializers.Serializer):
             friend_account.save()
             friend_transaction.save()
 
-            send_debt_paid_email.delay(debt)
+            send_debt_paid_email.delay(debt.pk)
 
             debt.delete()
         except Exception as e:

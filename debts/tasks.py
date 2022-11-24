@@ -11,8 +11,8 @@ from debts.models import Debt
 
 
 @shared_task()
-def send_debt_email(debt: Debt):
-    """Send account verification link to given user."""
+def send_debt_email(debt_pk):
+    debt = Debt.objects.get(pk=debt_pk)
     subject = "You have a new debt!"
     from_email = settings.EMAIL_HOST_USER
     content = render_to_string(
@@ -25,8 +25,8 @@ def send_debt_email(debt: Debt):
 
 
 @shared_task()
-def send_debt_paid_email(debt: Debt):
-    """Send account verification link to given user."""
+def send_debt_paid_email(debt_pk):
+    debt = Debt.objects.get(pk=debt_pk)
     subject = "Your debt has been paid!"
     from_email = settings.EMAIL_HOST_USER
     content = render_to_string(

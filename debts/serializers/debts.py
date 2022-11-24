@@ -108,7 +108,7 @@ class PayDebtModelSerializer(serializers.Serializer):
             friend_account.save()
             friend_transaction.save()
 
-            send_debt_paid_email.delay(debt.pk)
+            send_debt_paid_email.delay(debt.id)
 
             debt.delete()
         except Exception as e:

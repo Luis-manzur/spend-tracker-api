@@ -1,1 +1,5 @@
-from .debts import DebtModelSerializer, CreateDebtModelSerializer, PayDebtModelSerializer
+from .debts import (
+    DebtModelSerializer,
+    CreateDebtModelSerializer,
+    PayDebtModelSerializer,
+)

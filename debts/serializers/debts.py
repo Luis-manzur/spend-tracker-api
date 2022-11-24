@@ -38,9 +38,11 @@ class PayDebtModelSerializer(serializers.Serializer):
         try:
             debt = Debt.objects.get(pk=data)
             if not debt:
-                raise serializers.ValidationError("This debt id did not match any debt!")
+                raise serializers.ValidationError(
+                    "This debt id did not match any debt!"
+                )
             else:
-                self.context['debt'] = debt
+                self.context["debt"] = debt
 
         except Exception as e:
             raise serializers.ValidationError(e)
@@ -51,14 +53,18 @@ class PayDebtModelSerializer(serializers.Serializer):
         try:
             account = Account.objects.get(pk=data)
             if not account:
-                raise serializers.ValidationError("This account id did not match any account!")
+                raise serializers.ValidationError(
+                    "This account id did not match any account!"
+                )
             else:
-                debt: Debt = self.context['debt']
+                debt: Debt = self.context["debt"]
                 if not debt:
                     raise serializers.ValidationError("The debt wasn't found")
                 if account.balance < debt.amount:
-                    raise serializers.ValidationError("This account doesn't have enough balance!")
-                self.context['account'] = account
+                    raise serializers.ValidationError(
+                        "This account doesn't have enough balance!"
+                    )
+                self.context["account"] = account
 
         except Exception as e:
             raise serializers.ValidationError(e)
@@ -71,9 +77,14 @@ class PayDebtModelSerializer(serializers.Serializer):
             debt: Debt = self.context["debt"]
             transaction_description = f"debt payment to {account.user.username}"
             transaction_name = f"debt to {account.user.username}"
-            transaction = Transaction.objects.create(account=account, category="Debt", type="Expense",
-                                                     description=transaction_description, amount=debt.amount,
-                                                     name=transaction_name)
+            transaction = Transaction.objects.create(
+                account=account,
+                category="Debt",
+                type="Expense",
+                description=transaction_description,
+                amount=debt.amount,
+                name=transaction_name,
+            )
             account.balance -= debt.amount
             account.save()
             transaction.save()

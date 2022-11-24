@@ -15,8 +15,11 @@ from users.serializers import (
     UserSignUpSerializer,
     FriendsSerializer,
 )
-from users.serializers.friends import FriendRequestModelSerializer, CreateFriendRequestModelSerializer, \
-    AcceptFriendRequestSerializer
+from users.serializers.friends import (
+    FriendRequestModelSerializer,
+    CreateFriendRequestModelSerializer,
+    AcceptFriendRequestSerializer,
+)
 from users.serializers.profiles import ProfileModelSerializer
 
 

@@ -8,7 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from debts.models import Debt
-from debts.serializers import DebtModelSerializer, CreateDebtModelSerializer, PayDebtModelSerializer
+from debts.serializers import (
+    DebtModelSerializer,
+    CreateDebtModelSerializer,
+    PayDebtModelSerializer,
+)
 
 
 class DebtViewSet(

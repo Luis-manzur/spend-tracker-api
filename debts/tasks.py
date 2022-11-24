@@ -36,3 +36,4 @@ def send_debt_paid_email(debt_pk):
     msg = EmailMultiAlternatives(subject, content, from_email, [debt.to_user.email])
     msg.attach_alternative(content, "text/html")
     msg.send()
+    debt.delete()

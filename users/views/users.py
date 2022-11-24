@@ -129,6 +129,7 @@ class UserViewSet(
             if friend_request.to_user == request.user:
                 friend_request.to_user.friends.add(friend_request.from_user)
                 friend_request.from_user.friends.add(friend_request.to_user)
+                friend_request.delete()
                 message = {"message": "Friend request accepted successfully!"}
             else:
                 message = {"message": "Friend request not yours!"}

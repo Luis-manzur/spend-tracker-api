@@ -75,8 +75,6 @@ class PayDebtModelSerializer(serializers.Serializer):
         try:
             account: Account = self.context["account"]
             debt: Debt = self.context["debt"]
-            transaction_description = f"debt payment to {debt.from_user.username}"
-            transaction_name = f"debt to {debt.from_user.username}"
             transaction = Transaction.objects.create(
                 account=account,
                 category="Debt",
@@ -97,7 +95,7 @@ class PayDebtModelSerializer(serializers.Serializer):
                 type="Income",
                 description=f"debt from {debt.to_user.username}",
                 amount=debt.amount,
-                name=f"debt to {debt.to_user.username}",
+                name=f"debt from {debt.to_user.username}",
             )
             friend_account.balance += debt.amount
             friend_account.save()

@@ -126,6 +126,9 @@ class UserViewSet(
     def accept_friend_request(self, request, *args, **kwargs):
         try:
             friend_request = FriendRequest.objects.get(id=request.data["id"])
+            if not friend_request:
+                message = {"message": "Friend request doesn't exist!"}
+                return Response(message, status=status.HTTP_404_NOT_FOUND)
             if friend_request.to_user == request.user:
                 friend_request.to_user.friends.add(friend_request.from_user)
                 friend_request.from_user.friends.add(friend_request.to_user)
@@ -133,6 +136,7 @@ class UserViewSet(
                 message = {"message": "Friend request accepted successfully!"}
             else:
                 message = {"message": "Friend request not yours!"}
+                return Response(message, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             message = {f"message": f"Friend request failed because '{e}'"}
 

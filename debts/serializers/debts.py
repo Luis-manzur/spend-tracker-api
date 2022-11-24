@@ -3,6 +3,7 @@ from rest_framework import serializers
 
 from accounts.models import Account
 from debts.models import Debt
+from debts.tasks import send_debt_email, send_debt_paid_email
 from transactions.models import Transaction
 from users.serializers import SimpleUserSerializer
 
@@ -19,6 +20,10 @@ class CreateDebtModelSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("You can't create a debt to your self!")
 
         return data
+
+    def create(self, validated_data):
+        send_debt_email.delay(validated_data)
+        return super(CreateDebtModelSerializer, self).create(validated_data)
 
 
 class DebtModelSerializer(serializers.ModelSerializer):
@@ -100,6 +105,8 @@ class PayDebtModelSerializer(serializers.Serializer):
             friend_account.balance += debt.amount
             friend_account.save()
             friend_transaction.save()
+
+            send_debt_paid_email.delay(debt)
 
             debt.delete()
         except Exception as e:

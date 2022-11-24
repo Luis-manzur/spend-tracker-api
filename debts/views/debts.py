@@ -1,6 +1,5 @@
 """Debts views."""
 
-from django.db.models import Q
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
@@ -24,7 +23,7 @@ class DebtViewSet(
     Handle Account create, update and retrieve.
     """
 
-    filter_backends = (OrderingFilter, SearchFilter)
+    filter_backends = (OrderingFilter, SearchFilter,)
     filter_fields = ("to_user__username", "from_user__username")
 
     def get_serializer_class(self):
@@ -40,7 +39,7 @@ class DebtViewSet(
         queryset = Debt.objects.all()
         if self.action == "list":
             queryset = Debt.objects.filter(
-                Q(from_user=self.request.user) | Q(to_user=self.request.user)
+                to_user=self.request.user
             )
         return queryset
 

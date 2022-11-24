@@ -118,6 +118,7 @@ class UserViewSet(
                 message = {"message": "Friend request already sent!"}
         except Exception as e:
             message = {f"message": f"Friend request failed because {e}"}
+            return Response(message, status=status.HTTP_404_NOT_FOUND)
 
         return Response(message, status=status.HTTP_201_CREATED)
 

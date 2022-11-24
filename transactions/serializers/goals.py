@@ -34,13 +34,11 @@ class CreateGoalModelSerializer(serializers.ModelSerializer):
 
             goal_amount = self.initial_data.get("amount")
             if balance >= goal_amount:
-                raise serializers.ValidationError(
-                    "You already have your goal amount"
-                )
+                raise serializers.ValidationError("You already have your goal amount")
         return data
 
     def create(self, data):
-        del data['use_current_savings']
+        del data["use_current_savings"]
 
         balance = self.context.get("balance")
         if balance:

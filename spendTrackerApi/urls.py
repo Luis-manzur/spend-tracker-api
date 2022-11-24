@@ -34,4 +34,5 @@ urlpatterns = [
     path("", include(("users.urls", "users"), namespace="users")),
     path("", include(("accounts.urls", "accounts"), namespace="accounts")),
     path("", include(("transactions.urls", "transactions"), namespace="transactions")),
+    path("", include(("debts.urls", "debts"), namespace="debts")),
 ]

@@ -33,11 +33,10 @@ class User(SpendTrackerModel, AbstractUser):
         default=True,
         help_text="Set to true when the user have verified its email address.",
     )
+    friends = models.ManyToManyField("User", blank=True)
 
     def __str__(self):
-        """Return username."""
         return self.username
 
     def get_short_name(self):
-        """Return username."""
         return self.username

@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('users', '0002_remove_profile_balance'),
+        ("users", "0002_remove_profile_balance"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='membership',
-            field=models.CharField(choices=[('PREMIUM', 'PREMIUM'), ('FREE', 'FREE')], default='FREE', max_length=8),
+            model_name="profile",
+            name="membership",
+            field=models.CharField(
+                choices=[("PREMIUM", "PREMIUM"), ("FREE", "FREE")],
+                default="FREE",
+                max_length=8,
+            ),
         ),
     ]

@@ -3,4 +3,6 @@ from .users import (
     UserModelSerializer,
     UserSignUpSerializer,
     AccountVerificationSerializer,
+    FriendsSerializer,
+    SimpleUserSerializer,
 )

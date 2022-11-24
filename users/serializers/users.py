@@ -142,3 +142,19 @@ class AccountVerificationSerializer(serializers.Serializer):
         user = User.objects.get(username=payload["user"])
         user.is_verified = True
         user.save()
+
+
+class SimpleUserSerializer(serializers.ModelSerializer):
+    profile = ProfileModelSerializer(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "profile")
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+    friends = SimpleUserSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = User
+        fields = ("friends",)

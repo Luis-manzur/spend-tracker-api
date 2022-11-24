@@ -106,10 +106,13 @@ class CreateTransactionModelSerializer(serializers.ModelSerializer):
             goals = Goal.objects.filter(user=account.user, completed=False)
 
             for goal in goals:
-                self.sum_transaction_amount_to_goal(validated_data["amount"], self.initial_data["type"], goal)
+                self.sum_transaction_amount_to_goal(
+                    validated_data["amount"], self.initial_data["type"], goal
+                )
 
-            self.sum_transaction_amount_to_account(validated_data["amount"], self.initial_data["type"], account)
-
+            self.sum_transaction_amount_to_account(
+                validated_data["amount"], self.initial_data["type"], account
+            )
 
         else:
             monthly_bill["transaction"] = transaction

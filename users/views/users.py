@@ -6,18 +6,25 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from users.models import User
+from users.models.friends import FriendRequest
 from users.permissions import IsAccountOwner
 from users.serializers import (
     AccountVerificationSerializer,
     UserLoginSerializer,
     UserModelSerializer,
     UserSignUpSerializer,
+    FriendsSerializer,
 )
+from users.serializers.friends import FriendRequestModelSerializer, CreateFriendRequestModelSerializer, \
+    AcceptFriendRequestSerializer
 from users.serializers.profiles import ProfileModelSerializer
 
 
 class UserViewSet(
-    mixins.RetrieveModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
 ):
     """User view set.
     Handle sign up, login and account verification.
@@ -36,6 +43,10 @@ class UserViewSet(
             return AccountVerificationSerializer
         elif self.action == "profile":
             return ProfileModelSerializer
+        elif self.action == "send_friend_request":
+            return CreateFriendRequestModelSerializer
+        elif self.action == "accept_friend_request":
+            return AcceptFriendRequestSerializer
         else:
             return UserModelSerializer
 
@@ -87,3 +98,46 @@ class UserViewSet(
         serializer.save()
         data = UserModelSerializer(user).data
         return Response(data)
+
+    @action(detail=False, url_path="send-friend-requests", methods=["post"])
+    def send_friend_request(self, request, *args, **kwargs):
+        try:
+            to_user = User.objects.get(username=request.data["to_user"])
+            from_user = request.user
+            friend_request, created = FriendRequest.objects.get_or_create(
+                from_user=from_user, to_user=to_user
+            )
+            if created:
+                message = {"message": "Friend request sent successfully!"}
+            else:
+                message = {"message": "Friend request already sent!"}
+        except Exception as e:
+            message = {f"message": f"Friend request failed because {e}"}
+
+        return Response(message, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=["post"], url_path="accept-friend-requests")
+    def accept_friend_request(self, request, *args, **kwargs):
+        try:
+            friend_request = FriendRequest.objects.get(id=request.data["id"])
+            if friend_request.to_user == request.user:
+                friend_request.to_user.friends.add(friend_request.from_user)
+                friend_request.from_user.friends.add(friend_request.to_user)
+                message = {"message": "Friend request accepted successfully!"}
+            else:
+                message = {"message": "Friend request not yours!"}
+        except Exception as e:
+            message = {f"message": f"Friend request failed because '{e}'"}
+
+        return Response(message, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="get-friend-requests")
+    def get_friend_requests(self, request, *args, **kwargs):
+        friend_requests = FriendRequest.objects.filter(to_user=request.user)
+        data = FriendRequestModelSerializer(friend_requests, many=True).data
+        return Response(data, status=status.HTTP_200_OK)
+
+    @action(detail=False, methods=["get"], url_path="get-friends")
+    def get_friend_request(self, request, *args, **kwargs):
+        data = FriendsSerializer(request.user).data
+        return Response(data, status=status.HTTP_200_OK)

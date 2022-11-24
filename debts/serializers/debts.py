@@ -25,7 +25,7 @@ class CreateDebtModelSerializer(serializers.ModelSerializer):
         debt = Debt.objects.create(**validated_data)
         debt.save()
         send_debt_email.delay(debt)
-        return debt
+        return {"message": "Debt created successfully!"}
 
 
 class DebtModelSerializer(serializers.ModelSerializer):

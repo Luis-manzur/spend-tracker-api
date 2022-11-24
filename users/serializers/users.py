@@ -149,7 +149,7 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("username", "profile")
+        fields = ("username", "profile", "id")
 
 
 class FriendsSerializer(serializers.ModelSerializer):

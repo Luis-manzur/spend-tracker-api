@@ -81,9 +81,9 @@ class PayDebtModelSerializer(serializers.Serializer):
                 account=account,
                 category="Debt",
                 type="Expense",
-                description=transaction_description,
+                description=f"debt payment to {debt.from_user.username}",
                 amount=debt.amount,
-                name=transaction_name,
+                name=f"debt to {debt.from_user.username}",
             )
             account.balance -= debt.amount
             account.save()
@@ -95,9 +95,9 @@ class PayDebtModelSerializer(serializers.Serializer):
                 account=friend_account,
                 category="Income",
                 type="Income",
-                description=transaction_description,
+                description=f"debt from {debt.to_user.username}",
                 amount=debt.amount,
-                name=transaction_name,
+                name=f"debt to {debt.to_user.username}",
             )
             friend_account.balance += debt.amount
             friend_account.save()

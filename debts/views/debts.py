@@ -25,7 +25,7 @@ class DebtViewSet(
     """
 
     filter_backends = (OrderingFilter, SearchFilter)
-    filter_fields = ("to_user", "from_user")
+    filter_fields = ("to_user__username", "from_user__username")
 
     def get_serializer_class(self):
         """Assign serializer based on action"""
